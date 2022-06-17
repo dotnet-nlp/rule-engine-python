@@ -26,8 +26,7 @@ RUN apt-get update \
  && apt-get install -y python3.8-full python3.8-dev \
  && wget https://bootstrap.pypa.io/get-pip.py \
  && python3.8 get-pip.py \
- && rm get-pip.py \
- && rm -rf /var/lib/apt/lists/*
+ && rm get-pip.py
 
 # install pythonnet
 RUN pip install --upgrade pip \
