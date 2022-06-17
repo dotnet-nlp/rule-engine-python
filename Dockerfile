@@ -1,13 +1,14 @@
 FROM ubuntu:20.04
 
 ARG DEBIAN_FRONTEND=noninteractive
-ENV TZ=Europe/Moscow
+ENV TZ=UTC
 
 # some tools
 RUN apt-get update \
+ && apt-get install -y software-properties-common \
  && apt-get install -y wget \
  && apt-get install -y unzip \
- && apt-get install -y software-properties-common \
+ && apt-get install -y apt-transport-https \
  && apt-get install -y gnupg \
  && apt-get install -y ca-certificates \
  && apt-get install -y build-essential
@@ -35,28 +36,26 @@ RUN pip install --upgrade pip \
  && pip install --upgrade wheel \
  && pip install --upgrade pythonnet==2.5.2
 
-COPY test.py /opt/
+# clone repository
+RUN cd /opt \
+ && wget https://github.com/dotnet-nlp/rule-engine/archive/refs/heads/main.zip \
+ && unzip main.zip \
+ && rm main.zip
 
-## install dotnet
+# install dotnet
 #RUN wget https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb \
 # && dpkg -i packages-microsoft-prod.deb \
 # && rm packages-microsoft-prod.deb \
 # && apt-get update \
-# && apt-get install -y apt-transport-https \
-# && apt-get update \
-# && apt-get install -y dotnet-sdk-6.0 \
-# && rm -rf /var/lib/apt/lists/*
-#
-## prepare dlls
-#RUN cd /opt \
-# && wget https://github.com/dotnet-nlp/rule-engine/archive/refs/heads/main.zip \
-# && unzip main.zip \
-# && rm main.zip
+# && apt-get install -y dotnet-sdk-6.0
+
+# publish dlls
 #RUN cd /opt/rule-engine-main \
-# && ls -al \
 # && dotnet publish RuleEngine.Core/RuleEngine.Core.csproj -p:RuntimeIdentifier=linux-x64 -c Release --self-contained --output /opt/release \
 # && dotnet publish RuleEngine.Mechanics.Peg/RuleEngine.Mechanics.Peg.csproj -p:RuntimeIdentifier=linux-x64 -c Release --self-contained --output /opt/release \
 # && dotnet publish RuleEngine.Mechanics.Regex/RuleEngine.Mechanics.Regex.csproj -p:RuntimeIdentifier=linux-x64 -c Release --self-contained --output /opt/release
 
 RUN rm -rf /var/lib/apt/lists/* \
  && rm -rf /tmp/*
+
+COPY test.py /opt/
