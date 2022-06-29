@@ -1,9 +1,18 @@
+import sys
+import os
+
+sys.path.append('/opt/release')
+
+from clr_loader import get_coreclr
+from pythonnet import set_runtime
+
+rt = get_coreclr("/opt/runtimeconfig.json")
+set_runtime(rt)
+
 import clr
-from System import Console
 
-Console.Write('> ')
-name = Console.ReadLine()
+clr.AddReference("System.Runtime")
+clr.AddReference("DotnetNlp.RuleEngine.Core")
+from DotnetNlp.RuleEngine.Core import RuleSpaceFactory, MechanicsBundle
 
-Console.WriteLine(f'Hi, {name}!')
-
-
+print(list(AppDomain.CurrentDomain.GetAssemblies()))

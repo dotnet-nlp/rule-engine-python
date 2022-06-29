@@ -11,7 +11,9 @@ RUN apt-get update \
  && apt-get install -y apt-transport-https \
  && apt-get install -y gnupg \
  && apt-get install -y ca-certificates \
- && apt-get install -y build-essential
+ && apt-get install -y build-essential \
+ && apt-get install -y clang \
+ && apt-get install -y libglib2.0-dev
 
 # install mono
 RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF \
@@ -33,7 +35,14 @@ RUN pip install --upgrade pip \
  && pip install --upgrade setuptools \
  && pip install --upgrade scons \
  && pip install --upgrade wheel \
- && pip install --upgrade pythonnet==2.5.2
+ && pip install --upgrade --pre pythonnet
+
+# install dotnet
+RUN wget https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb \
+ && dpkg -i packages-microsoft-prod.deb \
+ && rm packages-microsoft-prod.deb \
+ && apt-get update \
+ && apt-get install -y dotnet-sdk-6.0
 
 # clone repository
 RUN cd /opt \
@@ -41,20 +50,14 @@ RUN cd /opt \
  && unzip main.zip \
  && rm main.zip
 
-# install dotnet
-#RUN wget https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb \
-# && dpkg -i packages-microsoft-prod.deb \
-# && rm packages-microsoft-prod.deb \
-# && apt-get update \
-# && apt-get install -y dotnet-sdk-6.0
-
 # publish dlls
-#RUN cd /opt/rule-engine-main \
-# && dotnet publish RuleEngine.Core/RuleEngine.Core.csproj -p:RuntimeIdentifier=linux-x64 -c Release --self-contained --output /opt/release \
-# && dotnet publish RuleEngine.Mechanics.Peg/RuleEngine.Mechanics.Peg.csproj -p:RuntimeIdentifier=linux-x64 -c Release --self-contained --output /opt/release \
-# && dotnet publish RuleEngine.Mechanics.Regex/RuleEngine.Mechanics.Regex.csproj -p:RuntimeIdentifier=linux-x64 -c Release --self-contained --output /opt/release
+RUN cd /opt/rule-engine-main \
+ && dotnet publish DotnetNlp.RuleEngine.Core/DotnetNlp.RuleEngine.Core.csproj -p:RuntimeIdentifier=linux-x64 -c Release --self-contained --output /opt/release \
+ && dotnet publish DotnetNlp.RuleEngine.Mechanics.Peg/DotnetNlp.RuleEngine.Mechanics.Peg.csproj -p:RuntimeIdentifier=linux-x64 -c Release --self-contained --output /opt/release \
+ && dotnet publish DotnetNlp.RuleEngine.Mechanics.Regex/DotnetNlp.RuleEngine.Mechanics.Regex.csproj -p:RuntimeIdentifier=linux-x64 -c Release --self-contained --output /opt/release
 
 RUN rm -rf /var/lib/apt/lists/* \
  && rm -rf /tmp/*
 
+COPY runtimeconfig.json /opt/
 COPY test.py /opt/
