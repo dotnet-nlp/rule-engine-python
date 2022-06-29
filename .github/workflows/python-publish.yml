@@ -1,0 +1,54 @@
+name: Upload PyPI Package
+
+#on:
+#  repository_dispatch:
+#    types: [nuget-release]
+on: workflow_dispatch
+
+jobs:
+  prepare-dlls:
+    name: Prepare source DLL files
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: 6.0.x
+      - name: Copy dotnet projects
+        run: |
+          wget https://github.com/dotnet-nlp/rule-engine/archive/refs/heads/main.zip
+          unzip main.zip -d ./source
+      - name: Build dotnet projects
+        run: |
+          dotnet publish ./source/DotnetNlp.RuleEngine.Core/DotnetNlp.RuleEngine.Core.csproj -p:RuntimeIdentifier=linux-x64 -c Release --self-contained --output ./release
+          dotnet publish ./source/DotnetNlp.RuleEngine.Mechanics.Peg/DotnetNlp.RuleEngine.Mechanics.Peg.csproj -p:RuntimeIdentifier=linux-x64 -c Release --self-contained --output ./release
+          dotnet publish ./source/DotnetNlp.RuleEngine.Mechanics.Regex/DotnetNlp.RuleEngine.Mechanics.Regex.csproj -p:RuntimeIdentifier=linux-x64 -c Release --self-contained --output ./release
+#      - name: Zip DLLs
+#        run: zip -r release.zip ./release
+      - uses: actions/upload-artifact@v2
+        with:
+          name: dotnet-release
+          path: ./release/
+
+  publish-pypi-package:
+    name: Create and publish PyPI package
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python
+      uses: actions/setup-python@v3
+      with:
+        python-version: '3.x'
+    - uses: actions/download-artifact@v3
+      with:
+        name: dotnet-release
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install build
+    - name: Build package
+      run: python -m build
+    - name: Publish package
+      uses: pypa/gh-action-pypi-publish@v1
+      with:
+        user: __token__
+        password: ${{ secrets.PYPI_API_TOKEN }}
