@@ -16,7 +16,8 @@ jobs:
       - name: Copy dotnet projects
         run: |
           wget https://github.com/dotnet-nlp/rule-engine/archive/refs/heads/main.zip
-          unzip main.zip -d ./source
+          unzip main.zip
+          mv rule-engine-main source
       - name: Build dotnet projects
         run: |
           dotnet publish ./source/DotnetNlp.RuleEngine.Core/DotnetNlp.RuleEngine.Core.csproj -p:RuntimeIdentifier=linux-x64 -c Release --self-contained --output ./release
