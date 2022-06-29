@@ -49,8 +49,10 @@ jobs:
         pip install build
     - name: Build package
       run: python -m build
+    - name: LS
+      run: ls -al
     - name: Publish package
-      uses: pypa/gh-action-pypi-publish@v1
+      uses: pypa/gh-action-pypi-publish@release/v1
       with:
         user: __token__
         password: ${{ secrets.PYPI_API_TOKEN }}
