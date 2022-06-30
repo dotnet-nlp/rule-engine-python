@@ -6,4 +6,5 @@ build-backend = "setuptools.build_meta"
 py-modules = []
 
 [project]
-name = "DotnetNlp.RuleEngine"
+name = "DotnetNlp.RuleEngine.Bundle"
+version = "1.0.0"
