@@ -19,10 +19,7 @@ jobs:
           unzip main.zip
           mv rule-engine-main source
       - name: Build dotnet projects
-        run: |
-          dotnet publish ./source/DotnetNlp.RuleEngine.Core/DotnetNlp.RuleEngine.Core.csproj -p:RuntimeIdentifier=linux-x64 -c Release --self-contained --output ./release
-          dotnet publish ./source/DotnetNlp.RuleEngine.Mechanics.Peg/DotnetNlp.RuleEngine.Mechanics.Peg.csproj -p:RuntimeIdentifier=linux-x64 -c Release --self-contained --output ./release
-          dotnet publish ./source/DotnetNlp.RuleEngine.Mechanics.Regex/DotnetNlp.RuleEngine.Mechanics.Regex.csproj -p:RuntimeIdentifier=linux-x64 -c Release --self-contained --output ./release
+        run: dotnet publish ./source/DotnetNlp.RuleEngine.Bundle/DotnetNlp.RuleEngine.Bundle.csproj -p:RuntimeIdentifier=linux-x64 -c Release --self-contained --output ./release
 #      - name: Zip DLLs
 #        run: zip -r release.zip ./release
       - uses: actions/upload-artifact@v2
