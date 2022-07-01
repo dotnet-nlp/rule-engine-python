@@ -37,17 +37,18 @@ jobs:
       uses: actions/setup-python@v3
       with:
         python-version: '3.x'
-    - uses: actions/download-artifact@v3
-      with:
-        name: dotnet-release
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install build
+    - uses: actions/download-artifact@v3
+      with:
+        name: dotnet-release
+        path: src/dotnet_nlp/rule_engine/bundle/dlls
+    - name: Copy runtime config
+      run: cp runtimeconfig.json src/dotnet_nlp/rule_engine/bundle
     - name: Build package
       run: python -m build
-    - name: LS
-      run: ls -al
     - name: Publish package
       uses: pypa/gh-action-pypi-publish@release/v1
       with:

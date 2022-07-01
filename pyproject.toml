@@ -1,10 +1,17 @@
+[project]
+name = "dotnet_nlp.rule_engine.bundle"
+#version = "1.0.0"
+readme = "README.md"
+license = {file="LICENSE"}
+dynamic = ["version"]
+
 [build-system]
-requires = ["setuptools"]
+requires = ["setuptools", "setuptools-scm"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
-py-modules = []
+    [tool.setuptools.packages.find]
+    where = ["src"]
 
-[project]
-name = "DotnetNlp.RuleEngine.Bundle"
-version = "1.0.0"
+    [tool.setuptools.package-data]
+    "dotnet_nlp.rule_engine.bundle" = ["runtimeconfig.json"]
