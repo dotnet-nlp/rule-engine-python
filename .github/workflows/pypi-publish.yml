@@ -1,9 +1,8 @@
 name: Upload PyPI Package
 
-#on:
-#  repository_dispatch:
-#    types: [nuget-release]
-on: workflow_dispatch
+on:
+  release:
+    types: [created]
 
 jobs:
   prepare-dlls:
@@ -20,8 +19,6 @@ jobs:
           mv rule-engine-main source
       - name: Build dotnet projects
         run: dotnet publish ./source/DotnetNlp.RuleEngine.Bundle/DotnetNlp.RuleEngine.Bundle.csproj -p:RuntimeIdentifier=linux-x64 -c Release --self-contained --output ./release
-#      - name: Zip DLLs
-#        run: zip -r release.zip ./release
       - uses: actions/upload-artifact@v2
         with:
           name: dotnet-release

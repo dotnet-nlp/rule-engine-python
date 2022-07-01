@@ -1,6 +1,5 @@
 [project]
-name = "dotnet_nlp.rule_engine.bundle"
-#version = "1.0.0"
+name = "dotnet_nlp.rule_engine"
 readme = "README.md"
 license = {file="LICENSE"}
 dynamic = ["version"]
@@ -14,4 +13,4 @@ build-backend = "setuptools.build_meta"
     where = ["src"]
 
     [tool.setuptools.package-data]
-    "dotnet_nlp.rule_engine.bundle" = ["runtimeconfig.json"]
+    "*" = ["runtimeconfig.json", "dlls/*"]
