@@ -45,7 +45,7 @@ jobs:
     - name: Copy runtime config
       run: cp runtimeconfig.json src/dotnet_nlp/rule_engine/bundle
     - name: Set version
-      run: echo "__version__ = \"${{ github.event.client_payload.version }}\"" | tee version
+      run: echo "__version__ = \"${{ github.event.client_payload.version }}\"" | tee src/dotnet_nlp/rule_engine/__init__.py
     - name: Build package
       run: python -m build
     - name: Publish package
