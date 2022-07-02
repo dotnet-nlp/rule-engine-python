@@ -5,7 +5,7 @@ license = {file="LICENSE"}
 dynamic = ["version"]
 
 [build-system]
-requires = ["setuptools", "setuptools-scm"]
+requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
@@ -14,3 +14,6 @@ build-backend = "setuptools.build_meta"
 
     [tool.setuptools.package-data]
     "*" = ["runtimeconfig.json", "dlls/*"]
+
+    [tool.setuptools.dynamic]
+    version = {file="version"}

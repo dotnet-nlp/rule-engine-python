@@ -1,22 +1,22 @@
-name: Upload PyPI Package
+name: Release PyPI packages on dotnet release created
 
 on:
-  release:
-    types: [created]
+  repository_dispatch:
+    types: [release-pypi-packages]
 
 jobs:
   prepare-dlls:
     name: Prepare source DLL files
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v3
+        with:
+          repository: dotnet-nlp/rule-engine
+          ref: ${{ github.event.client_payload.ref }}
+          path: source
       - uses: actions/setup-dotnet@v2
         with:
           dotnet-version: 6.0.x
-      - name: Copy dotnet projects
-        run: |
-          wget https://github.com/dotnet-nlp/rule-engine/archive/refs/heads/main.zip
-          unzip main.zip
-          mv rule-engine-main source
       - name: Build dotnet projects
         run: dotnet publish ./source/DotnetNlp.RuleEngine.Bundle/DotnetNlp.RuleEngine.Bundle.csproj -p:RuntimeIdentifier=linux-x64 -c Release --self-contained --output ./release
       - uses: actions/upload-artifact@v2
@@ -44,6 +44,8 @@ jobs:
         path: src/dotnet_nlp/rule_engine/bundle/dlls
     - name: Copy runtime config
       run: cp runtimeconfig.json src/dotnet_nlp/rule_engine/bundle
+    - name: Set version
+      run: echo ${{ github.event.client_payload.version }} | tee version
     - name: Build package
       run: python -m build
     - name: Publish package

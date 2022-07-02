@@ -1,7 +1,0 @@
-exclude *
-prune .github
-
-include src/*
-include MANIFEST.in
-include pyproject.toml
-include README.md
