@@ -16,4 +16,4 @@ build-backend = "setuptools.build_meta"
     "*" = ["runtimeconfig.json", "dlls/*"]
 
     [tool.setuptools.dynamic]
-    version = {file="version"}
+    version = {attr="dotnet_nlp.rule_engine.__version__"}
