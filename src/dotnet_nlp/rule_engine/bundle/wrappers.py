@@ -5,11 +5,14 @@ from DotnetNlp.RuleEngine.Core.Evaluation.Rule import IRuleMatcher
 from DotnetNlp.RuleEngine.Core.Evaluation.Rule.Projection.Arguments import RuleArguments
 from DotnetNlp.RuleEngine.Core.Evaluation.Rule.Result import RuleMatchResultCollection
 from DotnetNlp.RuleEngine.Bundle import Factory
+from src.dotnet_nlp.rule_engine.bundle import helpers
 
 
 class RuleSpaceWrapper(Dict[str, IRuleMatcher]):
     def __init__(self, rule_sets: Dict[str, str], rules: Dict[str, str]):
-        super().__init__({pair.Key: pair.Value for pair in Factory.Create(ruleSets=rule_sets, rules=rules)})
+        def create():
+            return Factory.Create(ruleSets=helpers.convert_dictionaries(rule_sets), rules=helpers.convert_dictionaries(rules))
+        super().__init__({pair.Key: pair.Value for pair in create()})
 
     def __getattr__(self, name):
         return self.__getitem__(name)
