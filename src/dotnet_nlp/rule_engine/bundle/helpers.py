@@ -1,13 +1,13 @@
 def initialize_pythonnet():
     import sys
-    sys.path.append("dlls")
+    sys.path.append("../dlls")
 
     from clr_loader import get_coreclr
     from pythonnet import set_runtime
-    set_runtime(get_coreclr("runtimeconfig.json"))
+    set_runtime(get_coreclr("../runtimeconfig.json"))
 
 
-def load_dotnet_library():
+def load_rule_engine():
     import clr
     clr.AddReference("DotnetNlp.RuleEngine.Core")
     clr.AddReference("DotnetNlp.RuleEngine.Mechanics.Peg")
@@ -16,4 +16,4 @@ def load_dotnet_library():
 
 def initialize_and_load():
     initialize_pythonnet()
-    load_dotnet_library()
+    load_rule_engine()

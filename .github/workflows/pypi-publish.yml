@@ -41,11 +41,13 @@ jobs:
     - uses: actions/download-artifact@v3
       with:
         name: dotnet-release
-        path: src/dotnet_nlp/rule_engine/bundle/dlls
+        path: src/dotnet_nlp/rule_engine/dlls
     - name: Copy runtime config
-      run: cp runtimeconfig.json src/dotnet_nlp/rule_engine/bundle
+      run: cp runtimeconfig.json src/dotnet_nlp/rule_engine
     - name: Set version
-      run: echo "__version__ = \"${{ github.event.client_payload.version }}\"" | tee src/dotnet_nlp/rule_engine/__init__.py
+      run: |
+        rm src/dotnet_nlp/rule_engine/__init__.py
+        echo "__version__ = \"${{ github.event.client_payload.version }}\"" | tee src/dotnet_nlp/rule_engine/__init__.py
     - name: Build package
       run: python -m build
     - name: Publish package
