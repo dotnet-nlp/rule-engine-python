@@ -6,17 +6,6 @@ from DotnetNlp.RuleEngine.Core.Evaluation.Rule.Projection.Arguments import RuleA
 from DotnetNlp.RuleEngine.Core.Evaluation.Rule.Result import RuleMatchResultCollection
 from DotnetNlp.RuleEngine.Bundle import Factory
 from dotnet_nlp.rule_engine.bundle.converter import Converter
-from dotnet_nlp.rule_engine.bundle.wrappers import RuleMatcherWrapper
-
-
-class RuleSpaceWrapper(Dict[str, RuleMatcherWrapper]):
-    def __init__(self, rule_sets: Dict[str, str], rules: Dict[str, str]):
-        def create():
-            return Factory.Create(
-                ruleSets=Converter.convert_dictionary__str_to_str(rule_sets),
-                rules=Converter.convert_dictionary__str_to_str(rules)
-            )
-        super().__init__({pair.Key: RuleMatcherWrapper(pair.Value) for pair in create()})
 
 
 class RuleMatcherWrapper:
@@ -78,3 +67,14 @@ class RuleMatcherWrapper:
             rule_arguments,
             cache
         )
+
+
+class RuleSpaceWrapper(Dict[str, RuleMatcherWrapper]):
+    def __init__(self, rule_sets: Dict[str, str], rules: Dict[str, str]):
+        def create():
+            return Factory.Create(
+                ruleSets=Converter.convert_dictionary__str_to_str(rule_sets),
+                rules=Converter.convert_dictionary__str_to_str(rules)
+            )
+
+        super().__init__({pair.Key: RuleMatcherWrapper(pair.Value) for pair in create()})
