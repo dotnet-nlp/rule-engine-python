@@ -5,23 +5,20 @@ from DotnetNlp.RuleEngine.Core.Evaluation.Rule import IRuleMatcher
 from DotnetNlp.RuleEngine.Core.Evaluation.Rule.Projection.Arguments import RuleArguments
 from DotnetNlp.RuleEngine.Core.Evaluation.Rule.Result import RuleMatchResultCollection
 from DotnetNlp.RuleEngine.Bundle import Factory
-from dotnet_nlp.rule_engine.bundle import helpers
+from dotnet_nlp.rule_engine.bundle.converter import Converter
 
 
 class RuleSpaceWrapper(Dict[str, IRuleMatcher]):
     def __init__(self, rule_sets: Dict[str, str], rules: Dict[str, str]):
         def create():
-            return Factory.Create(ruleSets=helpers.convert_dictionaries(rule_sets), rules=helpers.convert_dictionaries(rules))
+            return Factory.Create(
+                ruleSets=Converter.convert_dictionary__str_to_str(rule_sets),
+                rules=Converter.convert_dictionary__str_to_str(rules)
+            )
         super().__init__({pair.Key: pair.Value for pair in create()})
 
-    def __getattr__(self, name):
-        return self.__getitem__(name)
 
-    def __setattr__(self, name, value):
-        self.__setitem__(name, value)
-
-
-class RuleMatcherWrapper():
+class RuleMatcherWrapper:
     def __init__(self, source: IRuleMatcher):
         self.source = source
 
@@ -32,7 +29,12 @@ class RuleMatcherWrapper():
             rule_arguments: Optional[RuleArguments] = None,
             cache: Optional[IRuleSpaceCache] = None
     ) -> RuleMatchResultCollection:
-        return self.source.HasMatch(phrase.split(' '), first_symbol_index, rule_arguments, cache)
+        return self.source.HasMatch(
+            Converter.convert_list__str(phrase.split(' ')),
+            first_symbol_index,
+            rule_arguments,
+            cache
+        )
 
     def has_any_match(
             self,
@@ -41,7 +43,12 @@ class RuleMatcherWrapper():
             rule_arguments: Optional[RuleArguments] = None,
             cache: Optional[IRuleSpaceCache] = None
     ) -> RuleMatchResultCollection:
-        return self.source.HasAnyMatch(phrase.split(' '), first_symbol_index, rule_arguments, cache)
+        return self.source.HasAnyMatch(
+            Converter.convert_list__str(phrase.split(' ')),
+            first_symbol_index,
+            rule_arguments,
+            cache
+        )
 
     def match_and_project(
             self,
@@ -50,7 +57,12 @@ class RuleMatcherWrapper():
             rule_arguments: Optional[RuleArguments] = None,
             cache: Optional[IRuleSpaceCache] = None
     ) -> RuleMatchResultCollection:
-        return self.source.MatchAndProject(phrase.split(' '), first_symbol_index, rule_arguments, cache)
+        return self.source.MatchAndProject(
+            Converter.convert_list__str(phrase.split(' ')),
+            first_symbol_index,
+            rule_arguments,
+            cache
+        )
 
     def match_and_project_all(
             self,
@@ -59,4 +71,9 @@ class RuleMatcherWrapper():
             rule_arguments: Optional[RuleArguments] = None,
             cache: Optional[IRuleSpaceCache] = None
     ) -> RuleMatchResultCollection:
-        return self.source.MatchAndProjectAll(phrase.split(' '), first_symbol_index, rule_arguments, cache)
+        return self.source.MatchAndProjectAll(
+            Converter.convert_list__str(phrase.split(' ')),
+            first_symbol_index,
+            rule_arguments,
+            cache
+        )
