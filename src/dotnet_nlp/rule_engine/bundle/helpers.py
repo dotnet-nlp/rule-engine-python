@@ -28,4 +28,4 @@ def initialize_and_load():
 def convert_dictionaries(dictionary: dict):
     from System.Collections.Generic import Dictionary, KeyValuePair
 
-    return Dictionary[str, str]({KeyValuePair[str, str](key, value) for key, value in dictionary})
+    return Dictionary[str, str]([KeyValuePair[str, str](key, value) for key, value in dictionary])
