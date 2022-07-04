@@ -13,3 +13,4 @@ pip install dotnet_nlp.rule_engine
 
 See usage examples:
 - [Example 1](https://github.com/dotnet-nlp/rule-engine-python/tree/main/examples/example1.ipynb)
+  ([open in Google Colab](https://colab.research.google.com/github/dotnet-nlp/rule-engine-python/blob/main/examples/example1.ipynb))
