@@ -9,5 +9,4 @@ pip install dotnet_nlp.rule_engine
 # Usage
 
 See usage examples:
-[Raw usage](https://github.com/dotnet-nlp/rule-engine-python/tree/main/examples/raw.ipynb)
-[Wrapped usage](https://github.com/dotnet-nlp/rule-engine-python/tree/main/examples/wrapped.ipynb)
+- [Example 1](https://github.com/dotnet-nlp/rule-engine-python/tree/main/examples/wrapped.ipynb)

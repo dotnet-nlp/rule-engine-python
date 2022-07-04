@@ -5,7 +5,7 @@ from DotnetNlp.RuleEngine.Core.Evaluation.Rule import IRuleMatcher
 from DotnetNlp.RuleEngine.Core.Evaluation.Rule.Projection.Arguments import RuleArguments
 from DotnetNlp.RuleEngine.Core.Evaluation.Rule.Result import RuleMatchResultCollection
 from DotnetNlp.RuleEngine.Bundle import Factory
-from src.dotnet_nlp.rule_engine.bundle import helpers
+from dotnet_nlp.rule_engine.bundle import helpers
 
 
 class RuleSpaceWrapper(Dict[str, IRuleMatcher]):
