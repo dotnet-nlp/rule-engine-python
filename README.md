@@ -1,3 +1,6 @@
+[![Release NuGet packages on release created](https://github.com/dotnet-nlp/rule-engine/actions/workflows/nuget-release.yml/badge.svg)](https://github.com/dotnet-nlp/rule-engine/actions/workflows/nuget-release.yml)
+[![Release PyPI packages on dotnet release created](https://github.com/dotnet-nlp/rule-engine-python/actions/workflows/pypi-publish.yml/badge.svg)](https://github.com/dotnet-nlp/rule-engine-python/actions/workflows/pypi-publish.yml)
+
 ## Installation
 
 1. Make sure you've met all the [installation requirements of `pythonnet` package](https://pythonnet.github.io/#installation), which is used by this library to run dotnet backend.
