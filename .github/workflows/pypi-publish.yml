@@ -42,8 +42,6 @@ jobs:
       with:
         name: dotnet-release
         path: src/dotnet_nlp/rule_engine/dlls
-    - name: Copy runtime config
-      run: cp runtimeconfig.json src/dotnet_nlp/rule_engine
     - name: Set version
       run: |
         rm src/dotnet_nlp/rule_engine/__init__.py
