@@ -1,83 +1,10 @@
 from typing import Optional, Dict, Set
 from DotnetNlp.RuleEngine.Core.Evaluation.Cache import IRuleSpaceCache
-import DotnetNlp.RuleEngine.Core.Evaluation.Rule
 from DotnetNlp.RuleEngine.Core.Evaluation.Rule import IRuleMatcher
 from DotnetNlp.RuleEngine.Core.Evaluation.Rule.Projection.Arguments import RuleArguments
 from DotnetNlp.RuleEngine.Core.Evaluation.Rule.Result import RuleMatchResult, RuleMatchResultCollection
 from DotnetNlp.RuleEngine.Bundle import Factory, Strategy
 from dotnet_nlp.rule_engine.bundle.converter import Converter
-
-
-class RuleMatcherWrapper:
-    def __init__(self, source: IRuleMatcher):
-        self.source = source
-
-    def has_match(
-            self,
-            phrase: str,
-            first_symbol_index: int = 0,
-            rule_arguments: Optional[RuleArguments] = None,
-            cache: Optional[IRuleSpaceCache] = None
-    ) -> RuleMatchResultCollection:
-        return self.source.HasMatch(
-            Converter.to_dotnet__list__str(phrase.split(' ')),
-            first_symbol_index,
-            rule_arguments,
-            cache
-        )
-
-    def has_any_match(
-            self,
-            phrase: str,
-            first_symbol_index: int = 0,
-            rule_arguments: Optional[RuleArguments] = None,
-            cache: Optional[IRuleSpaceCache] = None
-    ) -> RuleMatchResultCollection:
-        return self.source.HasAnyMatch(
-            Converter.to_dotnet__list__str(phrase.split(' ')),
-            first_symbol_index,
-            rule_arguments,
-            cache
-        )
-
-    def match_and_project(
-            self,
-            phrase: str,
-            first_symbol_index: int = 0,
-            rule_arguments: Optional[RuleArguments] = None,
-            cache: Optional[IRuleSpaceCache] = None
-    ) -> RuleMatchResultCollection:
-        return self.source.MatchAndProject(
-            Converter.to_dotnet__list__str(phrase.split(' ')),
-            first_symbol_index,
-            rule_arguments,
-            cache
-        )
-
-    def match_and_project_all(
-            self,
-            phrase: str,
-            first_symbol_index: int = 0,
-            rule_arguments: Optional[RuleArguments] = None,
-            cache: Optional[IRuleSpaceCache] = None
-    ) -> RuleMatchResultCollection:
-        return self.source.MatchAndProjectAll(
-            Converter.to_dotnet__list__str(phrase.split(' ')),
-            first_symbol_index,
-            rule_arguments,
-            cache
-        )
-
-
-class RuleSpaceWrapper(Dict[str, RuleMatcherWrapper]):
-    def __init__(self, rule_sets: Dict[str, str], rules: Dict[str, str]):
-        def create():
-            return Factory.Create(
-                ruleSets=Converter.to_dotnet__dictionary__str_to_str(rule_sets),
-                rules=Converter.to_dotnet__dictionary__str_to_str(rules)
-            )
-
-        super().__init__({pair.Key: RuleMatcherWrapper(pair.Value) for pair in create()})
 
 
 class RuleMatchResultWrapper:
@@ -98,3 +25,79 @@ class RuleMatchResultCollectionWrapper(Set[RuleMatchResultWrapper]):
     def __init__(self, rule_match_result_collection: RuleMatchResultCollection):
         super().__init__({RuleMatchResultWrapper(rule_match) for rule_match in rule_match_result_collection})
         self.best = RuleMatchResultWrapper(rule_match_result_collection.Best(Strategy.Default))
+
+
+class RuleMatcherWrapper:
+    def __init__(self, source: IRuleMatcher):
+        self.source = source
+
+    def has_match(
+            self,
+            phrase: str,
+            first_symbol_index: int = 0,
+            rule_arguments: Optional[RuleArguments] = None,
+            cache: Optional[IRuleSpaceCache] = None
+    ) -> bool:
+        return self.source.HasMatch(
+            Converter.to_dotnet__list__str(phrase.split(' ')),
+            first_symbol_index,
+            rule_arguments,
+            cache
+        )
+
+    def has_any_match(
+            self,
+            phrase: str,
+            first_symbol_index: int = 0,
+            rule_arguments: Optional[RuleArguments] = None,
+            cache: Optional[IRuleSpaceCache] = None
+    ) -> bool:
+        return self.source.HasAnyMatch(
+            Converter.to_dotnet__list__str(phrase.split(' ')),
+            first_symbol_index,
+            rule_arguments,
+            cache
+        )
+
+    def match_and_project(
+            self,
+            phrase: str,
+            first_symbol_index: int = 0,
+            rule_arguments: Optional[RuleArguments] = None,
+            cache: Optional[IRuleSpaceCache] = None
+    ) -> RuleMatchResultCollectionWrapper:
+        return RuleMatchResultCollectionWrapper(
+            self.source.MatchAndProject(
+                Converter.to_dotnet__list__str(phrase.split(' ')),
+                first_symbol_index,
+                rule_arguments,
+                cache
+            )
+        )
+
+    def match_and_project_all(
+            self,
+            phrase: str,
+            first_symbol_index: int = 0,
+            rule_arguments: Optional[RuleArguments] = None,
+            cache: Optional[IRuleSpaceCache] = None
+    ) -> RuleMatchResultCollectionWrapper:
+        return RuleMatchResultCollectionWrapper(
+            self.source.MatchAndProjectAll(
+                Converter.to_dotnet__list__str(phrase.split(' ')),
+                first_symbol_index,
+                rule_arguments,
+                cache
+            )
+        )
+
+
+class RuleSpaceWrapper(Dict[str, RuleMatcherWrapper]):
+    def __init__(self, rule_sets: Dict[str, str], rules: Dict[str, str]):
+        def create():
+            return Factory.Create(
+                ruleSets=Converter.to_dotnet__dictionary__str_to_str(rule_sets),
+                rules=Converter.to_dotnet__dictionary__str_to_str(rules)
+            )
+
+        super().__init__({pair.Key: RuleMatcherWrapper(pair.Value) for pair in create()})
